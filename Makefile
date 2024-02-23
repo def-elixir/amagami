@@ -31,6 +31,7 @@ server:
 
 create:
 # create database
+	docker exec -it $(container_name) mix deps.get
 	docker exec -it $(container_name) mix ecto.create
 
 migrate:

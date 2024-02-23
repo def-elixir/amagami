@@ -17,6 +17,7 @@ defmodule AmagamiWeb.CharacterJSON do
 
   defp data(%Character{} = character) do
     %{
+      id: character.id,
       name: character.name,
       cv: character.cv,
       class: character.class,
