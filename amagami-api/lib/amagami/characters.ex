@@ -101,4 +101,23 @@ defmodule Amagami.Characters do
   def change_character(%Character{} = character, attrs \\ %{}) do
     Character.changeset(character, attrs)
   end
+
+  @doc """
+  Returns the list of characters.
+
+  ## Examples
+
+      iex> list_characters()
+      [%Character{}, ...]
+
+  """
+  def search_characters(params \\ %{}) do
+    IO.puts "paraaaaa"
+    dbg params
+    # todo map to keyword list
+    query = from p in Character,
+      where: [id: 1],
+      order_by: [desc: :id]
+    Repo.all(query)
+  end
 end

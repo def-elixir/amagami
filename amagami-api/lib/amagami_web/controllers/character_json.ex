@@ -5,7 +5,7 @@ defmodule AmagamiWeb.CharacterJSON do
   Renders a list of characters.
   """
   def index(%{characters: characters}) do
-    for(character <- characters, do: data(character))
+    %{data: for(character <- characters, do: data(character))}
   end
 
   @doc """

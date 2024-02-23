@@ -6,8 +6,8 @@ defmodule AmagamiWeb.CharacterController do
 
   action_fallback AmagamiWeb.FallbackController
 
-  def index(conn, _params) do
-    characters = Characters.list_characters()
+  def index(conn, params) do
+    characters = Characters.search_characters(params)
     render(conn, :index, characters: characters)
   end
 

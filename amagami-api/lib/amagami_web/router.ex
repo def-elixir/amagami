@@ -7,7 +7,7 @@ defmodule AmagamiWeb.Router do
 
   scope "/api", AmagamiWeb do
     pipe_through :api
-    resources "/characters", CharacterController, except: [:new, :edit]
+    resources "/characters", CharacterController, only: [:index]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
