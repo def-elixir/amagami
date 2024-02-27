@@ -1,6 +1,11 @@
 image=amagami:latest
 container_name=amagami-api
 
+setup: build run start
+# build image, run container, create database and migrate then seed
+	docker exec -it $(container_name) mix deps.get
+	docker exec -it $(container_name) mix ecto.setup
+
 build:
 # docker build
 	docker build -t $(image) .
@@ -29,19 +34,10 @@ server:
 # run server
 	docker exec -it $(container_name) mix phx.server
 
-create:
-# create database
-	docker exec -it $(container_name) mix deps.get
-	docker exec -it $(container_name) mix ecto.create
-
-migrate:
-# migrate database
-	docker exec -it $(container_name) mix ecto.migrate
-
 sqlite:
 # connect database
 	docker exec -it $(container_name) sqlite3 ./data/amagami_dev.db
 
-setup: build run start create migrate
-# build image, run container, create database and migrate then seed
-	docker exec -it $(container_name) mix run priv/repo/seeds.exs
+migrate:
+# migrate database
+	docker exec -it $(container_name) mix ecto.migrate
