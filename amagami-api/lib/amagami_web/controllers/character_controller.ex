@@ -6,9 +6,44 @@ defmodule AmagamiWeb.CharacterController do
 
   action_fallback AmagamiWeb.FallbackController
 
+  defp search_params(params) do
+
+    default = %{
+      id: nil,
+      name: nil,
+      class: nil,
+      blood_type: nil,
+      age: nil,
+      birthday: nil,
+      description: nil
+    }
+
+    types = %{
+      id: :integer,
+      name: :string,
+      class: :string,
+      blood_type: :string,
+      age: :integer,
+      birthday: :string,
+      description: :string
+    }
+
+    changeset =
+      {default, types}
+      |> Ecto.Changeset.cast(params, Map.keys(types))
+
+    if changeset.valid? do
+        {:ok, Ecto.Changeset.apply_changes(changeset)}
+    else
+        {:error, changeset}
+    end
+  end
+
   def index(conn, params) do
-    characters = Characters.search_characters(params)
-    render(conn, :index, characters: characters)
+    with {:ok, search_params} <- search_params(params) do
+      characters = Characters.search_characters(search_params)
+      render(conn, :index, characters: characters)
+    end
   end
 
   def create(conn, %{"character" => character_params}) do

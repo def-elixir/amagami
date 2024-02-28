@@ -107,17 +107,31 @@ defmodule Amagami.Characters do
 
   ## Examples
 
-      iex> list_characters()
+      iex> search_characters()
       [%Character{}, ...]
 
   """
   def search_characters(params \\ %{}) do
-    IO.puts "paraaaaa"
-    dbg params
-    # todo map to keyword list
-    query = from p in Character,
-      where: [id: 1],
-      order_by: [desc: :id]
-    Repo.all(query)
+    from(c in Character)
+    |> filter(:id, params.id)
+    |> filter(:name, params.name)
+    |> filter(:class, params.class)
+    |> filter(:blood_type, params.blood_type)
+    |> filter(:age, params.age)
+    |> filter(:birthday, params.birthday)
+    |> filter(:description, params.description)
+    |> Repo.all()
+  end
+
+  defp filter(query, _field, nil), do: query
+
+  defp filter(query, field, value) when is_integer(value) do
+    query
+    |> where([c], field(c, ^field) == ^value)
+  end
+
+  defp filter(query, field, value) when is_binary(value) do
+    query
+    |> where([c], like(field(c, ^field), ^"%#{value}%"))
   end
 end
